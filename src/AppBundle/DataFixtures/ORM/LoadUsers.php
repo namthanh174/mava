@@ -1,11 +1,14 @@
 <?php
 // mava/src/AppBundle/DataFixtures/ORM/LoadUsers.php
 namespace AppBundle\DataFixtures\ORM;
+
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use AppBundle\Entity\User;
 
-class LoadUsers implements FixtureInterface
+class LoadUsers extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -21,6 +24,15 @@ class LoadUsers implements FixtureInterface
         $user2->setEmail('jack@mava.info');
         $manager->persist($user2);
         $manager->flush();
+        
+        $this->addReference('user-john', $user1);
+        $this->addReference('user-jack', $user2);
 
+    }
+    
+    // getOrder() method
+    public function getOrder()
+    {
+        return 30; // the order in which fixtures will be loaded
     }
 }
